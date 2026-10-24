@@ -20,16 +20,8 @@
 		onclose: () => void;
 	}
 
-	let {
-		open,
-		documentTitle,
-		documentId,
-		owner,
-		shares,
-		users,
-		currentUserId,
-		onclose
-	}: Props = $props();
+	let { open, documentTitle, documentId, owner, shares, users, currentUserId, onclose }: Props =
+		$props();
 
 	let dialogEl = $state<HTMLDialogElement | null>(null);
 	let addUserId = $state('');
@@ -129,134 +121,132 @@
 				</div>
 			{/snippet}
 
-			{#snippet children()}
-				<form
-					method="POST"
-					action="/docs/{documentId}?/share"
-					class="sh-add"
-					use:enhance={() => {
-						return async ({ result, update }) => {
-							const ok = handleActionResult(result);
-							if (ok) {
-								await invalidate(SIDEBAR_DEPENDS);
-							}
-							await update();
-						};
-					}}
+			<form
+				method="POST"
+				action="/docs/{documentId}?/share"
+				class="sh-add"
+				use:enhance={() => {
+					return async ({ result, update }) => {
+						const ok = handleActionResult(result);
+						if (ok) {
+							await invalidate(SIDEBAR_DEPENDS);
+						}
+						await update();
+					};
+				}}
+			>
+				<label class="sr-only" for="share-user">Add person</label>
+				<select
+					id="share-user"
+					name="userId"
+					class="sh-field"
+					bind:this={addUserSelect}
+					bind:value={addUserId}
+					disabled={addDisabled}
 				>
-					<label class="sr-only" for="share-user">Add person</label>
-					<select
-						id="share-user"
-						name="userId"
-						class="sh-field"
-						bind:this={addUserSelect}
-						bind:value={addUserId}
-						disabled={addDisabled}
+					{#if addDisabled}
+						<option value="">Everyone already has access</option>
+					{:else}
+						{#each addableUsers as user (user.id)}
+							<option value={user.id}>{user.name}</option>
+						{/each}
+					{/if}
+				</select>
+
+				<label class="sr-only" for="share-role">Role</label>
+				<select
+					id="share-role"
+					name="role"
+					class="sh-field sh-role"
+					bind:value={addRole}
+					disabled={addDisabled}
+				>
+					<option value="viewer">Viewer</option>
+					<option value="editor">Editor</option>
+				</select>
+
+				<button type="submit" class="sh-share-btn" disabled={addDisabled}>Share</button>
+			</form>
+
+			<p class="sh-label">People with access</p>
+
+			<ul class="sh-list">
+				<li class="sh-row">
+					<span class="sh-av" style:background={userAvatarColor({ id: owner.id })}
+						>{userInitials(owner.name)}</span
 					>
-						{#if addDisabled}
-							<option value="">Everyone already has access</option>
-						{:else}
-							{#each addableUsers as user (user.id)}
-								<option value={user.id}>{user.name}</option>
-							{/each}
-						{/if}
-					</select>
+					<span class="sh-meta">
+						<span class="sh-name">{owner.name}{owner.id === currentUserId ? ' (you)' : ''}</span>
+						<span class="sh-email">{owner.email}</span>
+					</span>
+					<span class="sh-owner">Owner</span>
+				</li>
 
-					<label class="sr-only" for="share-role">Role</label>
-					<select
-						id="share-role"
-						name="role"
-						class="sh-field sh-role"
-						bind:value={addRole}
-						disabled={addDisabled}
-					>
-						<option value="viewer">Viewer</option>
-						<option value="editor">Editor</option>
-					</select>
-
-					<button type="submit" class="sh-share-btn" disabled={addDisabled}>Share</button>
-				</form>
-
-				<p class="sh-label">People with access</p>
-
-				<ul class="sh-list">
+				{#each shares as share (share.userId)}
 					<li class="sh-row">
-						<span class="sh-av" style:background={userAvatarColor({ id: owner.id })}
-							>{userInitials(owner.name)}</span
+						<span class="sh-av" style:background={userAvatarColor({ id: share.userId })}
+							>{userInitials(share.name)}</span
 						>
 						<span class="sh-meta">
-							<span class="sh-name">{owner.name}{owner.id === currentUserId ? ' (you)' : ''}</span>
-							<span class="sh-email">{owner.email}</span>
+							<span class="sh-name">{share.name}</span>
+							<span class="sh-email">{share.email}</span>
 						</span>
-						<span class="sh-owner">Owner</span>
-					</li>
-
-					{#each shares as share (share.userId)}
-						<li class="sh-row">
-							<span class="sh-av" style:background={userAvatarColor({ id: share.userId })}
-								>{userInitials(share.name)}</span
+						<div class="sh-row-act">
+							<form
+								method="POST"
+								action="/docs/{documentId}?/updateRole"
+								class="sh-role-f"
+								use:enhance={() => {
+									return async ({ result, update }) => {
+										const ok = handleActionResult(result);
+										if (ok) {
+											await invalidate(SIDEBAR_DEPENDS);
+										}
+										await update({ reset: false });
+									};
+								}}
 							>
-							<span class="sh-meta">
-								<span class="sh-name">{share.name}</span>
-								<span class="sh-email">{share.email}</span>
-							</span>
-							<div class="sh-row-act">
-								<form
-									method="POST"
-									action="/docs/{documentId}?/updateRole"
-									class="sh-role-f"
-									use:enhance={() => {
-										return async ({ result, update }) => {
-											const ok = handleActionResult(result);
-											if (ok) {
-												await invalidate(SIDEBAR_DEPENDS);
-											}
-											await update({ reset: false });
-										};
+								<input type="hidden" name="userId" value={share.userId} />
+								<label class="sr-only" for="role-{share.userId}">Role for {share.name}</label>
+								<select
+									id="role-{share.userId}"
+									name="role"
+									class="sh-field sh-field-sm"
+									value={share.role}
+									onchange={(event) => {
+										event.currentTarget.form?.requestSubmit();
 									}}
 								>
-									<input type="hidden" name="userId" value={share.userId} />
-									<label class="sr-only" for="role-{share.userId}">Role for {share.name}</label>
-									<select
-										id="role-{share.userId}"
-										name="role"
-										class="sh-field sh-field-sm"
-										value={share.role}
-										onchange={(event) => {
-											event.currentTarget.form?.requestSubmit();
-										}}
-									>
-										<option value="viewer">Viewer</option>
-										<option value="editor">Editor</option>
-									</select>
-								</form>
-								<form
-									method="POST"
-									action="/docs/{documentId}?/revoke"
-									use:enhance={() => {
-										return async ({ result, update }) => {
-											const ok = handleActionResult(result);
-											if (ok) {
-												await invalidate(SIDEBAR_DEPENDS);
-											}
-											await update();
-										};
-									}}
-								>
-									<input type="hidden" name="userId" value={share.userId} />
-									<button type="submit" class="sh-x" aria-label="Remove access for {share.name}">
-										<X size={18} />
-									</button>
-								</form>
-							</div>
-						</li>
-					{/each}
-				</ul>
+									<option value="viewer">Viewer</option>
+									<option value="editor">Editor</option>
+								</select>
+							</form>
+							<form
+								method="POST"
+								action="/docs/{documentId}?/revoke"
+								use:enhance={() => {
+									return async ({ result, update }) => {
+										const ok = handleActionResult(result);
+										if (ok) {
+											await invalidate(SIDEBAR_DEPENDS);
+										}
+										await update();
+									};
+								}}
+							>
+								<input type="hidden" name="userId" value={share.userId} />
+								<button type="submit" class="sh-x" aria-label="Remove access for {share.name}">
+									<X size={18} />
+								</button>
+							</form>
+						</div>
+					</li>
+				{/each}
+			</ul>
 
-				{#if inlineError}
-					<p class="sh-err" role="alert">{inlineError}</p>
-				{/if}
-			{/snippet}
+			{#if inlineError}
+				<p class="sh-err" role="alert">{inlineError}</p>
+			{/if}
 
 			{#snippet footer()}
 				<div class="sh-foot">

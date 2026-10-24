@@ -9,8 +9,7 @@ export interface ShareValidationInput {
 }
 
 export type ShareValidationResult =
-	| { ok: true }
-	| { ok: false; status: 400 | 403; message: string };
+	{ ok: true } | { ok: false; status: 400 | 403; message: string };
 
 export function validateShare(input: ShareValidationInput): ShareValidationResult {
 	if (input.actorAccess !== 'owner') {

@@ -2,15 +2,21 @@
 	import { enhance } from '$app/forms';
 	import FileText from '@lucide/svelte/icons/file-text';
 	import Plus from '@lucide/svelte/icons/plus';
+	import ImportFileControl from '#lib/features/public/import/ImportFileControl.svelte';
 	import UserMenu from '#lib/components/shared/UserMenu.svelte';
-	import type { PageProps } from './$types';
+	import type { User } from '#lib/types/user.ts';
 
-	let { data }: PageProps = $props();
+	interface Props {
+		users: User[];
+		user: User;
+	}
+
+	let { users, user }: Props = $props();
 </script>
 
 <div class="shell">
 	<header class="app-bar">
-		<UserMenu users={data.users} current={data.user} />
+		<UserMenu {users} current={user} />
 	</header>
 
 	<section class="home">
@@ -19,12 +25,15 @@
 		</div>
 		<h1 class="home-h">No document open</h1>
 		<p class="home-p">Pick a document from the sidebar or start a new one.</p>
-		<form method="POST" action="/?/create" use:enhance>
-			<button type="submit" class="home-btn">
-				<Plus size={18} />
-				New document
-			</button>
-		</form>
+		<div class="home-actions">
+			<form method="POST" action="/?/create" use:enhance class="home-create-f">
+				<button type="submit" class="home-btn">
+					<Plus size={18} />
+					New document
+				</button>
+			</form>
+			<ImportFileControl variant="home" />
+		</div>
 	</section>
 </div>
 
@@ -82,6 +91,18 @@
 		max-width: none;
 		font-size: 14px;
 		color: var(--text-muted);
+	}
+
+	.home-actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+	}
+
+	.home-create-f {
+		display: inline-flex;
 	}
 
 	.home-btn {

@@ -8,7 +8,7 @@
 	import Redo2 from '@lucide/svelte/icons/redo-2';
 	import Underline from '@lucide/svelte/icons/underline';
 	import Undo2 from '@lucide/svelte/icons/undo-2';
-	import { modKeyLabel } from '#lib/features/editor/mod-key.ts';
+	import { modKeyLabel } from '#lib/features/public/editor/mod-key.ts';
 	import Bezel from '#lib/components/ui/Bezel.svelte';
 
 	interface Props {
@@ -188,20 +188,18 @@
 						style:left="{menuPos.left}px"
 					>
 						<Bezel size="sm">
-							{#snippet children()}
-								{#each blockOptions as option (option.id)}
-									<button
-										type="button"
-										class="mi tb-menu-i"
-										class:tb-menu-i-h1={option.id === 'h1'}
-										class:tb-menu-i-h2={option.id === 'h2'}
-										role="menuitem"
-										onclick={() => applyBlockStyle(option.id)}
-									>
-										{option.label}
-									</button>
-								{/each}
-							{/snippet}
+							{#each blockOptions as option (option.id)}
+								<button
+									type="button"
+									class="mi tb-menu-i"
+									class:tb-menu-i-h1={option.id === 'h1'}
+									class:tb-menu-i-h2={option.id === 'h2'}
+									role="menuitem"
+									onclick={() => applyBlockStyle(option.id)}
+								>
+									{option.label}
+								</button>
+							{/each}
 						</Bezel>
 					</div>
 				{/if}

@@ -2,7 +2,7 @@
 	import { Editor } from '@tiptap/core';
 	import type { JSONContent } from '@tiptap/core';
 	import type { Attachment } from 'svelte/attachments';
-	import { editorExtensions } from '#lib/features/editor/extensions.ts';
+	import { editorExtensions } from '#lib/features/public/editor/extensions.ts';
 
 	interface Props {
 		content: JSONContent;
@@ -11,6 +11,7 @@
 		editor?: Editor | null;
 	}
 
+	// eslint-disable-next-line no-useless-assignment -- bindable editor instance for toolbar
 	let { content, editable, onchange, editor = $bindable(null) }: Props = $props();
 
 	function normalizeContent(raw: JSONContent): JSONContent {

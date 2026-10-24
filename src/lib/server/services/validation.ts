@@ -3,8 +3,7 @@ export const MAX_DOCUMENT_CONTENT_BYTES = 1024 * 1024;
 export type ContentValidationError = 'invalid' | 'oversized';
 
 export type ContentValidationResult =
-	| { valid: true }
-	| { valid: false; error: ContentValidationError };
+	{ valid: true } | { valid: false; error: ContentValidationError };
 
 export function validateDocumentContent(
 	value: unknown,

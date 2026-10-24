@@ -16,10 +16,7 @@ export function createContentAutosave(getDocumentId: () => string, options: Auto
 
 	function hasPendingChanges(): boolean {
 		return (
-			status === 'unsaved' ||
-			status === 'saving' ||
-			status === 'failed' ||
-			debounceId !== undefined
+			status === 'unsaved' || status === 'saving' || status === 'failed' || debounceId !== undefined
 		);
 	}
 

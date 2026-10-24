@@ -130,7 +130,9 @@
 		onclick={toggleMenu}
 		disabled={switching}
 	>
-		<span class="um-av" style:background={userAvatarColor(current)}>{userInitials(current.name)}</span>
+		<span class="um-av" style:background={userAvatarColor(current)}
+			>{userInitials(current.name)}</span
+		>
 		<span class="um-name">{firstName}</span>
 		<span class="um-chv"><ChevronDown size={16} /></span>
 	</button>
@@ -143,6 +145,7 @@
 			switching = true;
 			return async ({ result }) => {
 				if (result.type === 'redirect') {
+					// eslint-disable-next-line svelte/no-navigation-without-resolve
 					await goto(result.location, { invalidateAll: true });
 					switching = false;
 					open = false;

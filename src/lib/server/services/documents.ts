@@ -1,5 +1,9 @@
 import { error } from '@sveltejs/kit';
-import type { DocumentRecord, DocumentSummary, SharedDocumentSummary } from '#lib/types/document.ts';
+import type {
+	DocumentRecord,
+	DocumentSummary,
+	SharedDocumentSummary
+} from '#lib/types/document.ts';
 import type { Access, ShareCollaborator } from '#lib/types/share.ts';
 import {
 	canEditDocument,
@@ -40,12 +44,18 @@ interface DocumentViewRow {
 	owner_id: string;
 	created_at: string;
 	updated_at: string;
-	owner: { id: string; name: string; email: string } | { id: string; name: string; email: string }[] | null;
+	owner:
+		| { id: string; name: string; email: string }
+		| { id: string; name: string; email: string }[]
+		| null;
 	document_shares: Array<{
 		user_id: string;
 		role: 'viewer' | 'editor';
 		created_at: string;
-		user: { id: string; name: string; email: string } | { id: string; name: string; email: string }[] | null;
+		user:
+			| { id: string; name: string; email: string }
+			| { id: string; name: string; email: string }[]
+			| null;
 	}> | null;
 }
 
@@ -195,7 +205,11 @@ export async function listShared(userId: string): Promise<SharedDocumentSummary[
 
 		const owner = doc.owner;
 		const ownerName =
-			owner && !Array.isArray(owner) ? owner.name : Array.isArray(owner) ? owner[0]?.name : 'Unknown';
+			owner && !Array.isArray(owner)
+				? owner.name
+				: Array.isArray(owner)
+					? owner[0]?.name
+					: 'Unknown';
 
 		summaries.push({
 			id: doc.id,
@@ -211,11 +225,19 @@ export async function listShared(userId: string): Promise<SharedDocumentSummary[
 	return summaries;
 }
 
-export async function createDocument(userId: string): Promise<DocumentRecord> {
+export async function createDocument(
+	userId: string,
+	initial?: { title: string; content: unknown }
+): Promise<DocumentRecord> {
 	const supabase = getSupabase();
+	const row: { owner_id: string; title?: string; content?: unknown } = { owner_id: userId };
+	if (initial) {
+		row.title = initial.title;
+		row.content = initial.content;
+	}
 	const { data, error: dbError } = await supabase
 		.from('documents')
-		.insert({ owner_id: userId })
+		.insert(row)
 		.select('id, title, owner_id, content, created_at, updated_at')
 		.single();
 

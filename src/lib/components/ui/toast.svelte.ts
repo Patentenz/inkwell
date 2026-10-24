@@ -15,10 +15,7 @@ class ToastController {
 
 export const toast = new ToastController();
 
-export function toastMessageForAction(
-	kind: string,
-	userName: string
-): string {
+export function toastMessageForAction(kind: string, userName: string): string {
 	switch (kind) {
 		case 'shared-editor':
 			return `Shared with ${userName} as editor`;

@@ -11,13 +11,13 @@ Personal starter for new projects: **SvelteKit 3**, **Svelte 5 runes**, TypeScri
 
 ## Scripts
 
-| Command | Purpose |
-| -------- | -------- |
-| `npm run dev` | Dev server |
-| `npm run build` | Production build |
-| `npm run check` | `svelte-check` + types |
-| `npm run test` | Vitest (`src/**/*.spec.ts`, `*.svelte.spec.ts` when you add them) |
-| `npm run lint` / `format` | ESLint / Prettier |
+| Command                   | Purpose                                                           |
+| ------------------------- | ----------------------------------------------------------------- |
+| `npm run dev`             | Dev server                                                        |
+| `npm run build`           | Production build                                                  |
+| `npm run check`           | `svelte-check` + types                                            |
+| `npm run test`            | Vitest (`src/**/*.spec.ts`, `*.svelte.spec.ts` when you add them) |
+| `npm run lint` / `format` | ESLint / Prettier                                                 |
 
 ## Conventions (summary)
 

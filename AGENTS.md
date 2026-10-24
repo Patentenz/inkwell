@@ -53,11 +53,11 @@ Example:
 ```svelte
 <script lang="ts">
 	interface Props {
-		title: string
-		count?: number
+		title: string;
+		count?: number;
 	}
 
-	let { title, count = 0 }: Props = $props()
+	let { title, count = 0 }: Props = $props();
 </script>
 ```
 
@@ -122,6 +122,7 @@ src/
 ├── app.html                          # Base HTML document template
 └── env.ts                            # Environment variables (`defineEnvVars`)
 ```
+
 ```
 static/
 ├── img/
@@ -130,15 +131,13 @@ static/
 └── robots.txt
 ```
 
-
-
 - `src/routes` — routes. Route-only components can live next to the route.
 - `src/lib` — shared code. Import with the `#lib` alias and a file extension.
 - `src/lib/server` or `*.server.ts` — server-only; never import from client code.
 - `src/hooks.server.ts` / `src/hooks.client.ts` — optional; sit in `src/`, not under `routes/`.
 
 ```ts
-import { something } from '#lib/something.ts'
+import { something } from '#lib/something.ts';
 ```
 
 `$lib` is not configured. Do not import from it.
@@ -166,9 +165,9 @@ Type a page with `PageProps` and a layout with `LayoutProps`, both from `./$type
 
 ```svelte
 <script lang="ts">
-	import type { LayoutProps } from './$types'
+	import type { LayoutProps } from './$types';
 
-	let { children }: LayoutProps = $props()
+	let { children }: LayoutProps = $props();
 </script>
 
 {@render children()}
@@ -263,13 +262,13 @@ Declare every variable in `src/env.ts` with `defineEnvVars` from `@sveltejs/kit/
 Private:
 
 ```ts
-import { API_KEY } from '$app/env/private'
+import { API_KEY } from '$app/env/private';
 ```
 
 Public:
 
 ```ts
-import { PUBLIC_SITE_URL } from '$app/env/public'
+import { PUBLIC_SITE_URL } from '$app/env/public';
 ```
 
 `$app/env/private` can only be imported from server code.
