@@ -6,8 +6,6 @@
 ## Links
 
 - **Live app:** https://inkwell-five-gamma.vercel.app/
-- **Walkthrough video:** <VIDEO_URL>
-- **Source code:** <GITHUB_URL> (also included as a zip in this folder)
 
 ## Demo users (no password needed)
 
@@ -21,7 +19,7 @@ Switch users from the menu in the top-right corner.
 
 | File | Contents |
 |---|---|
-| `inkwell-source.zip` | Full source code (without node_modules) |
+| `inkwell-source.zip` | Full source code |
 | `README.md` | Setup, run instructions, features, scope cuts, limitations |
 | `ARCHITECTURE.md` | What I prioritized and why |
 | `AI-WORKFLOW.md` | AI tools used, what I changed or rejected, how I verified |
@@ -45,10 +43,3 @@ Stretch item completed: role-based sharing (Viewer / Editor).
 ## What's incomplete or cut
 
 Real auth, real-time collaboration, version history, comments, export, image upload and `.docx` import were deliberately cut. Reasoning is in the README.
-
-## Next 2–4 hours
-
-1. Supabase Auth with RLS policies
-2. Real-time presence, then Yjs collaborative editing
-3. Export to Markdown / PDF
-4. Version history
