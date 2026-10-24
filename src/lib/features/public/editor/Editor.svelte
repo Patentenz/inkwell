@@ -2,6 +2,7 @@
 	import { Editor } from '@tiptap/core';
 	import type { JSONContent } from '@tiptap/core';
 	import type { Attachment } from 'svelte/attachments';
+	import { untrack } from 'svelte';
 	import { editorExtensions } from '#lib/features/public/editor/extensions.ts';
 
 	interface Props {
@@ -13,6 +14,8 @@
 
 	// eslint-disable-next-line no-useless-assignment -- bindable editor instance for toolbar
 	let { content, editable, onchange, editor = $bindable(null) }: Props = $props();
+
+	let instance: Editor | null = null;
 
 	function normalizeContent(raw: JSONContent): JSONContent {
 		if (raw.type !== 'doc') {
@@ -26,23 +29,31 @@
 	}
 
 	const attachEditor: Attachment = (element) => {
-		const instance = new Editor({
-			element,
-			extensions: editorExtensions,
-			content: normalizeContent(content),
-			editable,
-			onUpdate: ({ editor: current }) => {
-				onchange?.(current.getJSON());
-			}
-		});
+		instance = untrack(
+			() =>
+				new Editor({
+					element,
+					extensions: editorExtensions,
+					content: normalizeContent(content),
+					editable,
+					onUpdate: ({ editor: current }) => {
+						onchange?.(current.getJSON());
+					}
+				})
+		);
 
 		editor = instance;
 
 		return () => {
-			instance.destroy();
+			instance?.destroy();
+			instance = null;
 			editor = null;
 		};
 	};
+
+	$effect(() => {
+		instance?.setEditable(editable, false);
+	});
 </script>
 
 <div class="ed">
