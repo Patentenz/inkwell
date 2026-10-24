@@ -6,6 +6,7 @@
 	import Sidebar from '#lib/features/public/workspace/Sidebar.svelte';
 	import {
 		SIDEBAR_CONTEXT_KEY,
+		type ActiveDocumentTitle,
 		type SidebarContext
 	} from '#lib/features/public/workspace/sidebar-context.ts';
 	import { setContext } from 'svelte';
@@ -14,6 +15,7 @@
 	let { data, children }: LayoutProps = $props();
 
 	let drawerOpen = $state(false);
+	let activeDocumentTitle = $state<ActiveDocumentTitle | null>(null);
 
 	const sidebarContext: SidebarContext = {
 		openDrawer: () => {
@@ -21,6 +23,9 @@
 		},
 		closeDrawer: () => {
 			drawerOpen = false;
+		},
+		setActiveDocumentTitle: (value) => {
+			activeDocumentTitle = value;
 		}
 	};
 
@@ -65,6 +70,7 @@
 	<Sidebar
 		ownedDocuments={data.ownedDocuments}
 		sharedDocuments={data.sharedDocuments}
+		{activeDocumentTitle}
 		{drawerOpen}
 		{isActive}
 		onCloseDrawerOnNav={closeDrawerOnNav}

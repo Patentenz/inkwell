@@ -9,10 +9,11 @@
 		ownedDocuments: DocumentSummary[];
 		sharedDocuments: SharedDocumentSummary[];
 		isActive: (id: string) => boolean;
+		listTitle: (docId: string, storedTitle: string) => string;
 		onNavigate: () => void;
 	}
 
-	let { ownedDocuments, sharedDocuments, isActive, onNavigate }: Props = $props();
+	let { ownedDocuments, sharedDocuments, isActive, listTitle, onNavigate }: Props = $props();
 </script>
 
 <nav class="sb-nav ink-scroll">
@@ -29,7 +30,7 @@
 					>
 						<span class="sb-ico"><FileText size={18} /></span>
 						<span class="sb-item-body">
-							<span class="sb-item-t">{doc.title}</span>
+							<span class="sb-item-t">{listTitle(doc.id, doc.title)}</span>
 							<span class="sb-item-sub">{formatEditedLabel(doc.updated_at)}</span>
 						</span>
 					</a>
@@ -53,7 +54,7 @@
 					>
 						<span class="sb-ico"><Users size={18} /></span>
 						<span class="sb-item-body">
-							<span class="sb-item-t">{doc.title}</span>
+							<span class="sb-item-t">{listTitle(doc.id, doc.title)}</span>
 							<span class="sb-item-sub"
 								>{doc.owner_name} · {doc.role === 'editor' ? 'Editor' : 'Viewer'}</span
 							>

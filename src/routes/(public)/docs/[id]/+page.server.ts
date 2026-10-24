@@ -1,12 +1,14 @@
 import type { Actions, PageServerLoad } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
+import { DOCUMENT_PAGE_DEPENDS } from '#lib/constants/document-page.ts';
 import { deleteDocument, getDocumentView, renameDocument } from '#lib/server/services/documents.ts';
 import { validateShare } from '#lib/server/services/share-rules.ts';
 import { deleteShare, patchShareRole, upsertShare } from '#lib/server/services/shares.ts';
 import { loadDocumentAccessContext } from '#lib/server/services/access.ts';
 import { getSupabase } from '#lib/server/db/supabase.ts';
 
-export const load: PageServerLoad = async ({ params, locals }) => {
+export const load: PageServerLoad = async ({ params, locals, depends }) => {
+	depends(DOCUMENT_PAGE_DEPENDS);
 	return getDocumentView(params.id, locals.userId);
 };
 

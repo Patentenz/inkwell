@@ -6,18 +6,37 @@
 	import Logo from '#lib/components/shared/Logo.svelte';
 	import { SIDEBAR_DEPENDS } from '#lib/constants/sidebar.ts';
 	import SidebarDocList from '#lib/features/public/workspace/SidebarDocList.svelte';
+	import type { ActiveDocumentTitle } from '#lib/features/public/workspace/sidebar-context.ts';
 	import type { DocumentSummary, SharedDocumentSummary } from '#lib/types/document.ts';
 
 	interface Props {
 		ownedDocuments: DocumentSummary[];
 		sharedDocuments: SharedDocumentSummary[];
+		activeDocumentTitle: ActiveDocumentTitle | null;
 		drawerOpen: boolean;
 		isActive: (id: string) => boolean;
 		onCloseDrawerOnNav: () => void;
 	}
 
-	let { ownedDocuments, sharedDocuments, drawerOpen, isActive, onCloseDrawerOnNav }: Props =
-		$props();
+	let {
+		ownedDocuments,
+		sharedDocuments,
+		activeDocumentTitle,
+		drawerOpen,
+		isActive,
+		onCloseDrawerOnNav
+	}: Props = $props();
+
+	function listTitle(docId: string, storedTitle: string): string {
+		if (
+			activeDocumentTitle &&
+			activeDocumentTitle.documentId === docId &&
+			isActive(docId)
+		) {
+			return activeDocumentTitle.title;
+		}
+		return storedTitle;
+	}
 </script>
 
 <aside class="sb" class:sb-open={drawerOpen}>
@@ -45,7 +64,13 @@
 
 	<ImportFileControl variant="sidebar" />
 
-	<SidebarDocList {ownedDocuments} {sharedDocuments} {isActive} onNavigate={onCloseDrawerOnNav} />
+	<SidebarDocList
+		{ownedDocuments}
+		{sharedDocuments}
+		{isActive}
+		{listTitle}
+		onNavigate={onCloseDrawerOnNav}
+	/>
 </aside>
 
 <style>

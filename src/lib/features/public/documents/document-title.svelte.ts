@@ -1,4 +1,5 @@
 import { invalidate } from '$app/navigation';
+import { DOCUMENT_PAGE_DEPENDS } from '#lib/constants/document-page.ts';
 import { SIDEBAR_DEPENDS } from '#lib/constants/sidebar.ts';
 
 export async function commitDocumentTitle(
@@ -24,7 +25,7 @@ export async function commitDocumentTitle(
 		headers: { 'x-sveltekit-action': 'true' }
 	});
 
-	await invalidate(SIDEBAR_DEPENDS);
+	await Promise.all([invalidate(SIDEBAR_DEPENDS), invalidate(DOCUMENT_PAGE_DEPENDS)]);
 }
 
 export function handleDocumentTitleKeydown(

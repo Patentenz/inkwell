@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { beforeNavigate, invalidate } from '$app/navigation';
 	import { SIDEBAR_DEPENDS } from '#lib/constants/sidebar.ts';
-	import { getContext } from 'svelte';
+	import { getContext, untrack } from 'svelte';
 	import type { Editor as TiptapEditor, JSONContent } from '@tiptap/core';
 	import ShareDialog from '#lib/features/public/sharing/ShareDialog.svelte';
 	import { createContentAutosave } from '#lib/features/public/editor/content-autosave.svelte.ts';
@@ -33,7 +33,25 @@
 	const sidebar = getContext<SidebarContext>(SIDEBAR_CONTEXT_KEY);
 
 	let editor = $state<TiptapEditor | null>(null);
-	let titleDraft = $derived(data.document.title);
+	let titleDraft = $state('');
+
+	$effect(() => {
+		const id = data.document.id;
+		if (!id) {
+			return;
+		}
+		titleDraft = untrack(() => data.document.title);
+	});
+
+	$effect(() => {
+		const id = data.document.id;
+		if (!id) {
+			return;
+		}
+		const label = titleDraft.trim() || 'Untitled document';
+		sidebar.setActiveDocumentTitle({ documentId: id, title: label });
+		return () => sidebar.setActiveDocumentTitle(null);
+	});
 	let lastSavedAt = $state<Date | null>(null);
 	let menuOpen = $state(false);
 	let shareOpen = $state(false);
