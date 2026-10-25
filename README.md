@@ -95,4 +95,3 @@ Requirements: Node.js 20 or newer, a free Supabase project.
 
 - [ARCHITECTURE.md](ARCHITECTURE.md): what I prioritized and why
 - [AI-WORKFLOW.md](AI-WORKFLOW.md): how I used AI tools
-- [SUBMISSION.md](SUBMISSION.md): what's included in this submission
